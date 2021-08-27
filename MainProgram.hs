@@ -6,37 +6,68 @@ import Data.List
 import qualified System.Process as SP
 
 main = do
-   
-    shuffledDeck <- shuffle baralho
-    
-    {-let jogador1 = criaJogador 0 shuffledDeck
-    
-    let shuffledDeck1 = atualizaBaralho 4 shuffledDeck
-    
-    let shuffledDeck = shuffledDeck1
-    
-    let jogador2 = criaJogador 0 shuffledDeck
-    
-    let shuffledDeck1 = atualizaBaralho 4 shuffledDeck
-    
-    let shuffledDeck = shuffledDeck1-}
     SP.system "clear"
     
-    putStr "Jogador 1: "
-    print jogador1
-    putStr "Jogador 2: "
-    print jogador2
-    putStr "Jogador 3: "
-    print jogador3
-    print mesa
-    
-    let indiceJogador = 0 
-    let numJogadores = 4
-    let ord = "horario" 
-    
-    turnoJogador mesa [jogador1,jogador2,jogador3,jogador4] indiceJogador ord numJogadores shuffledDeck  
+    shuffledDeck <- shuffle baralho
        
-                           
+    putStr "Qual a quantidade de jogadores desejada? "
+    numJ <- getLine
+    SP.system "clear"
+    
+    let numJogadores = (read numJ :: Int) 
+    let listaJogadores = criaListaJogadores numJogadores 0 shuffledDeck
+    let newDeck = atualizaBaralho (numJogadores*4) shuffledDeck
+    
+    putStrLn "Lista de Cartas Retiradas do Monte Embaralhado Para Cada Jogador: "
+    putStrLn ""
+    if (numJogadores == 2)
+        then do painelInicial listaJogadores 2
+    
+    else if (numJogadores == 3)
+        then do painelInicial listaJogadores 3
+     
+    else if (numJogadores == 4)
+        then do painelInicial listaJogadores 4
+             
+        else do return() 
+    
+    line <- getLine
+    
+    sorteiaJogadorIniciante numJogadores listaJogadores newDeck 
+       
+sorteiaJogadorIniciante numJogadores listaJogadores newDeck = do
+    
+    shuffledDeck <- shuffle newDeck
+    
+    let cartasSorteio = listaCartasSorteio numJogadores shuffledDeck
+    
+    let maiorCarta = calculaMaiorValorCarta (Carta "Zero" "") cartasSorteio
+    
+    let numValorRepetido = contaValorRepetidoCarta maiorCarta cartasSorteio
+    
+    let indiceMaiorCarta = -1
+    
+    if (numValorRepetido > 1)
+        then do painelSorteio cartasSorteio numJogadores indiceMaiorCarta 
+                sorteiaJogadorIniciante numJogadores listaJogadores newDeck
+        else do let indiceMaiorCarta = findIndiceCarta maiorCarta cartasSorteio  
+                painelSorteio cartasSorteio numJogadores indiceMaiorCarta 
+    
+    --findIndiceCarta maiorCarta cartasSorteio
+    shuffledDeck <- shuffle newDeck
+    
+    let mesaInicial = shuffledDeck !! 0
+    putStrLn ""    
+    putStr "Mesa inicial: "    
+    print mesaInicial  
+    
+    let newDeck = atualizaBaralho 1 shuffledDeck
+    let indiceJogadorInicial = findIndiceCarta maiorCarta cartasSorteio
+    let ordInicial = "horario"   
+    
+    line <- getLine
+        
+    turnoJogador mesa listaJogadores indiceJogadorInicial ordInicial numJogadores newDeck                      
 
 turnoJogador mesaInit listaJogadores indiceJogador ord numJogadores shuffledDeck = do
     
@@ -72,7 +103,8 @@ turnoJogador mesaInit listaJogadores indiceJogador ord numJogadores shuffledDeck
     
     let mesaAux = atualizaCorCoringa ((cor mesa2) == "Preta") (head shuffledColors) mesa2
     let mesa2 = mesaAux
-
+    
+    putStrLn "" 
     putStr "Mesa: " 
     print mesa2
     
@@ -124,6 +156,7 @@ incementaMaoJogador mesaInit listaJogadores indiceJogador ord numJogadores shuff
     let mesaAux = atualizaCorCoringa ((cor mesa2) == "Preta") (head shuffledColors) mesa2
     let mesa2 = mesaAux
 
+    putStrLn "" 
     putStr "Mesa: " 
     print mesa2
     
@@ -185,6 +218,101 @@ atualizaJogo mesaInit mesa2 listaJogadores indiceJogador ord numJogadores shuffl
                 turnoJogador mesa2 listaJogadores2 novoIndiceProxJogador ord numJogadores shuffledDeck
         
         else do turnoJogador mesa2 listaJogadores indiceProxJogador ord numJogadores shuffledDeck
+
+
+painelSorteio cartasSorteio numJogadores indiceMaiorCarta = do
+         
+         SP.system "clear"
+         
+         putStrLn "Sorteio Para Definir o Jogador Iniciante: "
+         putStrLn " "
+         
+         if ((numJogadores == 2) && (indiceMaiorCarta == -1))
+                then do putStrLn "EMPATE!"
+                        putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+         
+         else if (numJogadores == 3 && (indiceMaiorCarta == -1))
+                then do putStrLn "EMPATE!"
+                        putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2))
+                               
+         else if (numJogadores == 4 && (indiceMaiorCarta == -1))
+                then do putStrLn "EMPATE!"
+                        putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2))
+                        putStrLn ("Jogador 4: " ++ show (cartasSorteio !! 3))
+
+         else if ((numJogadores == 2) && (indiceMaiorCarta == 0))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0) ++ " <-- Vencedor do Sorteio")
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+         
+         else if ((numJogadores == 2) && (indiceMaiorCarta == 1))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1) ++ " <-- Vencedor do Sorteio")
+         
+         else if (numJogadores == 3 && (indiceMaiorCarta == 0))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0) ++ " <-- Vencedor do Sorteio")
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2))
+                        
+         else if (numJogadores == 3 && (indiceMaiorCarta == 1))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1) ++ " <-- Vencedor do Sorteio")
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2))
+
+         else if (numJogadores == 3 && (indiceMaiorCarta == 2))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2) ++ " <-- Vencedor do Sorteio")                                     
+                
+         else if (numJogadores == 4 && (indiceMaiorCarta == 0))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0) ++ " <-- Vencedor do Sorteio")
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2))
+                        putStrLn ("Jogador 4: " ++ show (cartasSorteio !! 3))
+        
+         else if (numJogadores == 4 && (indiceMaiorCarta == 1))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1) ++ " <-- Vencedor do Sorteio")
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2))
+                        putStrLn ("Jogador 4: " ++ show (cartasSorteio !! 3))                        
+
+         else if (numJogadores == 4 && (indiceMaiorCarta == 2))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2) ++ " <-- Vencedor do Sorteio")
+                        putStrLn ("Jogador 4: " ++ show (cartasSorteio !! 3))                         
+                
+         else if (numJogadores == 4 && (indiceMaiorCarta == 3))
+                then do putStrLn ("Jogador 1: " ++ show (cartasSorteio !! 0))
+                        putStrLn ("Jogador 2: " ++ show (cartasSorteio !! 1))
+                        putStrLn ("Jogador 3: " ++ show (cartasSorteio !! 2))
+                        putStrLn ("Jogador 4: " ++ show (cartasSorteio !! 3) ++ " <-- Vencedor do Sorteio")                         
+                
+                else do return()
+                 
+                 
+painelInicial listaJogadores numJogadores= do
+                  
+         if (numJogadores == 2)
+                then do putStrLn ("Jogador 1: " ++ show (listaJogadores !! 0))
+                        putStrLn ("Jogador 2: " ++ show (listaJogadores !! 1))
+         
+         else if (numJogadores == 3)
+                then do putStrLn ("Jogador 1: " ++ show (listaJogadores !! 0))
+                        putStrLn ("Jogador 2: " ++ show (listaJogadores !! 1))
+                        putStrLn ("Jogador 3: " ++ show (listaJogadores !! 2))
+                               
+         else if (numJogadores == 4)
+                then do putStrLn ("Jogador 1: " ++ show (listaJogadores !! 0))
+                        putStrLn ("Jogador 2: " ++ show (listaJogadores !! 1))
+                        putStrLn ("Jogador 3: " ++ show (listaJogadores !! 2))
+                        putStrLn ("Jogador 4: " ++ show (listaJogadores !! 3))
+                
+                else do return() 
 
 painel2Jogadores listaJogadores indiceJogador tipo = do         
          
@@ -369,6 +497,14 @@ criaJogador :: Int -> [Carta] -> [Carta]
 criaJogador 4 _ = []
 criaJogador a (x:xs) = x: criaJogador (a+1) xs
 
+criaJogadorParaLista :: Int -> Int -> [Carta] -> [Carta]
+criaJogadorParaLista 4 _ _ = []
+criaJogadorParaLista numCards index deck = (deck !! index): criaJogadorParaLista (numCards+1) (index+1) deck
+
+criaListaJogadores :: Int -> Int -> [Carta] -> [[Carta]]
+criaListaJogadores 0 _ _ = []
+criaListaJogadores nPlayers index deck = [criaJogadorParaLista 0 index deck] ++ criaListaJogadores (nPlayers-1) (index + 4) deck
+
 jogador1 :: [Carta]
 jogador1 = [Carta "Um" "Amarela",Carta "Mais2" "Amarela", Carta "Coringa" "Preta", Carta "Inverter" "Azul"]
 
@@ -454,3 +590,40 @@ ajustaIndice indiceJogador numJogadores
 atualizaListaJogadores :: Int -> [[Carta]] -> [[Carta]] -> [[Carta]]
 atualizaListaJogadores index jog listJog = (take (index) listJog) ++ jog ++ (drop (index+1) listJog)
 
+
+listaCartasSorteio :: Int -> [Carta] -> [Carta]
+listaCartasSorteio num baralho = take num baralho
+
+converteValorCarta :: Carta -> Int
+converteValorCarta (Carta t _)
+        | t == "Zero"   = 0
+        | t == "Um"     = 1
+        | t == "Dois"   = 2
+        | t == "Tres"   = 3
+        | t == "Quatro" = 4
+        | t == "Cinco"  = 5
+        | t == "Seis"   = 6
+        | t == "Sete"   = 7
+        | t == "Oito"   = 8
+        | t == "Nove"   = 9
+        | otherwise     = 0
+
+contaValorRepetidoCarta :: Carta -> [Carta] -> Int
+contaValorRepetidoCarta carta [] = 0
+contaValorRepetidoCarta carta (head:tail)
+        | (converteValorCarta carta) == (converteValorCarta head) = 1 + contaValorRepetidoCarta carta tail
+        | otherwise = 0 + contaValorRepetidoCarta carta tail 
+        
+calculaMaiorValorCarta :: Carta -> [Carta] -> Carta
+calculaMaiorValorCarta carta [] = carta
+calculaMaiorValorCarta carta (head:tail)
+        | (converteValorCarta head) > (converteValorCarta carta) = calculaMaiorValorCarta head tail
+        | otherwise = calculaMaiorValorCarta carta tail 
+
+findIndiceCarta :: Carta -> [Carta] -> Int
+findIndiceCarta carta cartas = fromJustToInt(carta `elemIndex` cartas)
+
+fromJustToInt :: Maybe Int -> Int
+fromJustToInt (Just i) = i 
+fromJustToInt Nothing = error "Valor inexistente."
+  
