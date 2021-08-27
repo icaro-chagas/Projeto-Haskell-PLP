@@ -48,12 +48,15 @@ sorteiaJogadorIniciante numJogadores listaJogadores newDeck = do
     let indiceMaiorCarta = -1
     
     if (numValorRepetido > 1)
-        then do painelSorteio cartasSorteio numJogadores indiceMaiorCarta 
+        then do painelSorteio cartasSorteio numJogadores indiceMaiorCarta
+                line <- getLine 
                 sorteiaJogadorIniciante numJogadores listaJogadores newDeck
         else do let indiceMaiorCarta = findIndiceCarta maiorCarta cartasSorteio  
-                painelSorteio cartasSorteio numJogadores indiceMaiorCarta 
-    
-    --findIndiceCarta maiorCarta cartasSorteio
+                painelSorteio cartasSorteio numJogadores indiceMaiorCarta
+                iniciaPartica listaJogadores indiceMaiorCarta numJogadores shuffledDeck 
+
+iniciaPartica listaJogadores indiceJogadorInicial numJogadores newDeck = do
+
     shuffledDeck <- shuffle newDeck
     
     let mesaInicial = shuffledDeck !! 0
@@ -62,12 +65,11 @@ sorteiaJogadorIniciante numJogadores listaJogadores newDeck = do
     print mesaInicial  
     
     let newDeck = atualizaBaralho 1 shuffledDeck
-    let indiceJogadorInicial = findIndiceCarta maiorCarta cartasSorteio
     let ordInicial = "horario"   
     
     line <- getLine
         
-    turnoJogador mesa listaJogadores indiceJogadorInicial ordInicial numJogadores newDeck                      
+    turnoJogador mesa listaJogadores indiceJogadorInicial ordInicial numJogadores newDeck                     
 
 turnoJogador mesaInit listaJogadores indiceJogador ord numJogadores shuffledDeck = do
     
