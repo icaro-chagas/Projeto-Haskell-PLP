@@ -8,7 +8,7 @@
   <a href="#o-time">TIME</a>
 </p>
 
-## Uno Jogo de Cartas
+## Uno
 
 O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a primeira pessoa que não tiver mais cartas para jogar ganha a partida.
 
