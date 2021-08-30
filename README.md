@@ -10,7 +10,7 @@
 
 ## Uno Jogo de Cartas
 
-O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a primeira pessoa que ficar sem cartas ganha a partida.
+O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a primeira pessoa que não tiver mais cartas para jogar ganha a partida.
 
 ## Funcionalidades
 
