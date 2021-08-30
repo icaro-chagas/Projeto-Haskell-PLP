@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <a href="#my-reading-journal">PROJETO</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#uno-jogo-de-cartas">PROJETO</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#funcionalidades">FUNCIONALIDADES</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#o-time">TIME</a>
 </p>
