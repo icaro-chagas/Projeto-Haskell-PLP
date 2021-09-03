@@ -28,7 +28,12 @@ O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a prime
     
 ## Como executar
 
-* É recomendado está em uma máquina Linux para executar o programa de uma forma correta, pois no Windows alguns comandos aplicado no terminal funciona pra Linux e pro Windows não.
+* Caso você rode o programa em windows: 
+* 1. Aparentemente a biblioteca System.Random não está incluída no pacote bibliotecas padrão do Haskell para windows, então você precisa incluí-la para o programa rodar.
+* 2. Por algum motivo o comando runhaskell não é reconhecido. Então será necessário compilar o programa com o comando `ghc --make MainProgram.hs`, e em seguida executar o programa com `./MainProgram`.
+* 3. Ainda assim, provavelmente, o programa não apresentará o comportamento desejado (por motivo desconhecido o windows não gera algumas saídas de dados implementadas no código).
+
+* Caso você rode o programa em Linux:
 
 * **Deve-se usar o comando**: `runghci MainProgram.hs` ou `runhaskell MainProgram.hs`
 
@@ -50,3 +55,4 @@ O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a prime
 * **Carta Pular**: Esta carta tem a finalidade de impedir o usuário seguinte de jogar. Tal carta só pode ser jogada caso esteja na “mesa” uma carta com a mesma cor ou com um símbolo igual.
 
 * **Carta Coringa +4**: Esta carta permite determinar a próxima cor a ser jogada e força o próximo jogador a tirar mais 4 cartas da pilha. Contudo, ela só pode ser jogada se o usuário não tiver outras cartas adequadas para descartar
+
