@@ -34,7 +34,7 @@ O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a prime
   * Ainda assim, provavelmente, o programa não apresentará o comportamento desejado (por motivo desconhecido o windows não gera algumas saídas de dados implementadas no código).<br>
 
 * **Caso você rode o programa em Linux**:
-  * Deve-se usar o comando: `runghci MainProgram.hs` ou `runhaskell MainProgram.hs`
+  * Deve-se usar o comando: `runghc MainProgram.hs` ou `runhaskell MainProgram.hs`
 
 ## Funcionalidades
 
