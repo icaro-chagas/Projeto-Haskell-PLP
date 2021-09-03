@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="#uno">PROJETO</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+    <a href="#Como_executar_o_projeto">Como executar o projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#funcionalidades">FUNCIONALIDADES</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#o-time">TIME</a>
 </p>
@@ -25,6 +26,12 @@ O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a prime
     4 Cartas coringa para troca de cor;<br>
     4 Cartas coringa para troca de cor e +4.<br>
     
+## Como executar o projeto
+
+* É recomendado está em uma máquina Linux para executar o programa de uma forma correta, pois no Windows alguns comandos aplicado no terminal funciona pra Linux e pro Windows não.
+
+* **Deve-se usar o comando**: `runghci MainProgram.hs` ou `runhaskell MainProgram.hs`
+
 ## Funcionalidades
 
 * **Regra para o início do jogo**: Cada jogador retira uma carta de uma pilha, o jogador que retirar a maior carta começa o jogo. Cartas especiais valem 0, e caso mais de um jogador retire cartas com o mesmo valor essas cartas são devolvidas para a pilha e um desempate acontece com nova retirada de cartas. Após o sorteio do primeiro jogador, uma carta é retirada do topo da pilha e o jogo começa.
