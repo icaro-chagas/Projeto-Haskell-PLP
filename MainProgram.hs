@@ -103,7 +103,6 @@ sorteiaJogadorIniciante numJogadores listaJogadores baralhoEmbaralhado opcaoJoga
     newDeck <- embaralhaLista baralhoEmbaralhado
 
     let cartasSorteio = listaCartasSorteio numJogadores baralhoEmbaralhado
-    --let cartasSorteio = [Carta "Pular" "Amarela", Carta "Mais2" "Verde"] (((APAGAR)))
     
     let cartaMenorValor = (Carta "Zero" "")
     let maiorCarta = calculaMaiorValorCarta cartaMenorValor cartasSorteio
