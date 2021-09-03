@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="#uno">PROJETO</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-    <a href="#Como_executar_o_projeto">Como executar o projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+    <a href="#como_executar">COMO EXECUTAR</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#funcionalidades">FUNCIONALIDADES</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#o-time">TIME</a>
 </p>
@@ -26,7 +26,7 @@ O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a prime
     4 Cartas coringa para troca de cor;<br>
     4 Cartas coringa para troca de cor e +4.<br>
     
-## Como executar o projeto
+## Como executar
 
 * É recomendado está em uma máquina Linux para executar o programa de uma forma correta, pois no Windows alguns comandos aplicado no terminal funciona pra Linux e pro Windows não.
 
