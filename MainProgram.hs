@@ -4,6 +4,9 @@ import Paineis
 import qualified System.Process as SP
 import Control.Concurrent
 
+valorInicialRecursao :: Int
+valorInicialRecursao = 0
+
 main = do
 
     SP.system "clear"
@@ -36,26 +39,25 @@ exibePainelInicial numJogadores = do
     
     baralhoEmbaralhado <- embaralhaLista baralho
     
-    let listaJogadores = criaListaJogadores numJogadores 0 baralhoEmbaralhado
-
-    let newDeck = atualizaBaralho (numJogadores*4) baralhoEmbaralhado
+    let listaJogadores = criaListaJogadores numJogadores valorInicialRecursao baralhoEmbaralhado
+    
+    let numCartasRetiradas = numJogadores*4
+    let newDeck = atualizaBaralho numCartasRetiradas baralhoEmbaralhado
     
     putStrLn "Lista de Cartas Retiradas do Monte Embaralhado Para Cada Jogador: "
     putStrLn ""
     if (numJogadores == 2)
-        then do painelInicial listaJogadores 2
+        then do painelInicial listaJogadores numJogadores
     
     else if (numJogadores == 3)
-        then do painelInicial listaJogadores 3
+        then do painelInicial listaJogadores numJogadores
      
     else if (numJogadores == 4)
-        then do painelInicial listaJogadores 4
+        then do painelInicial listaJogadores numJogadores
              
         else do return()
     
-    putStrLn ""
-    putStrLn ""
-    putStr "Pressione Enter para continuar!"
+    painelPressioneEnter
     line <- getLine
         
     validaOpcaoJogadorReal numJogadores listaJogadores newDeck 
@@ -91,7 +93,6 @@ validaOpcaoJogadorReal numJogadores listaJogadores baralhoEmbaralhado = do
         
         else do putStrLn "Você digitou um opção inválida. Tente novamente!"
                 threadDelay 2000000
-                SP.system "clear"
                 validaOpcaoJogadorReal numJogadores listaJogadores baralhoEmbaralhado
                
 
@@ -102,8 +103,10 @@ sorteiaJogadorIniciante numJogadores listaJogadores baralhoEmbaralhado opcaoJoga
     newDeck <- embaralhaLista baralhoEmbaralhado
 
     let cartasSorteio = listaCartasSorteio numJogadores baralhoEmbaralhado
+    --let cartasSorteio = [Carta "Pular" "Amarela", Carta "Mais2" "Verde"] (((APAGAR)))
     
-    let maiorCarta = calculaMaiorValorCarta (Carta "Zero" "") cartasSorteio
+    let cartaMenorValor = (Carta "Zero" "")
+    let maiorCarta = calculaMaiorValorCarta cartaMenorValor cartasSorteio
     
     let numValorRepetido = contaValorRepetidoCarta maiorCarta cartasSorteio
     
@@ -111,14 +114,13 @@ sorteiaJogadorIniciante numJogadores listaJogadores baralhoEmbaralhado opcaoJoga
     
     if (numValorRepetido > 1)
         then do painelSorteio cartasSorteio numJogadores indiceMaiorCarta
-                putStrLn ""
-                putStrLn ""
-                putStr "Pressione Enter para continuar!"
+                painelPressioneEnter
                 line <- getLine 
                 sorteiaJogadorIniciante numJogadores listaJogadores newDeck opcaoJogadorReal
         else do let indiceMaiorCarta = findIndiceCarta maiorCarta cartasSorteio  
                 painelSorteio cartasSorteio numJogadores indiceMaiorCarta
                 iniciaPartica listaJogadores indiceMaiorCarta numJogadores baralhoEmbaralhado opcaoJogadorReal 
+                
 
 iniciaPartica listaJogadores indiceJogadorInicial numJogadores baralhoEmbaralhado opcaoJogadorReal = do
 
@@ -129,17 +131,22 @@ iniciaPartica listaJogadores indiceJogadorInicial numJogadores baralhoEmbaralhad
     putStr "Mesa inicial: "    
     print mesaInicial  
     
-    putStrLn ""
-    putStrLn ""
-    putStr "Pressione Enter para continuar!"
+    painelPressioneEnter
     line <- getLine 
     
     let baralhoEmbaralhado = jogaCarta mesaInicial newDeck
-    let ordInicial = "horario"   
-            
+    let ordemInicial = "horario"   
+               
+    verificaJogadorReal mesaInicial listaJogadores indiceJogadorInicial ordemInicial numJogadores baralhoEmbaralhado opcaoJogadorReal
     
-    verificaJogadorReal mesaInicial listaJogadores indiceJogadorInicial ordInicial numJogadores baralhoEmbaralhado opcaoJogadorReal
-                              
+
+verificaJogadorReal mesa listaJogadores indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal = do
+    
+    if (opcaoJogadorReal && indiceJogador == 0)
+        then do turnoJogadorReal mesa listaJogadores ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
+        
+        else do turnoJogador mesa listaJogadores indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal     
+                                 
 
 turnoJogador mesaInicial listaJogadores indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal = do
     
@@ -151,14 +158,15 @@ turnoJogador mesaInicial listaJogadores indiceJogador ordem numJogadores baralho
     let testCoringaMais4 = testJogaCoringaMais4 mesaInicial jogador
     let mesa2 = atualizaMesa mesaInicial jogador testCoringaMais4    
     
+    let tipoPainel = "normal"
     if (numJogadores == 2)
-        then do painel2Jogadores listaJogadores indiceJogador "normal"
+        then do painel2Jogadores listaJogadores indiceJogador tipoPainel
     
     else if (numJogadores == 3)
-        then do painel3Jogadores listaJogadores indiceJogador "normal"
+        then do painel3Jogadores listaJogadores indiceJogador tipoPainel
         
     else if (numJogadores == 4)
-        then do painel4Jogadores listaJogadores indiceJogador "normal"
+        then do painel4Jogadores listaJogadores indiceJogador tipoPainel
         
         else do return()
         
@@ -169,7 +177,9 @@ turnoJogador mesaInicial listaJogadores indiceJogador ordem numJogadores baralho
     
     coresEmbaralhadas <- embaralhaLista cores
     
-    let mesaAux = atualizaCorCoringa ((cor mesa2) == "Preta") (head coresEmbaralhadas) mesa2
+    let verificaCorPreta = (cor mesa2) == "Preta"
+    let corAleatoria = head coresEmbaralhadas
+    let mesaAux = atualizaCorCoringa verificaCorPreta corAleatoria mesa2
     let mesa2 = mesaAux
     
     putStrLn "" 
@@ -186,33 +196,33 @@ turnoJogador mesaInicial listaJogadores indiceJogador ordem numJogadores baralho
     
 incementaMaoJogador mesaInicial listaJogadores indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal = do
     
-    putStrLn ""
-    putStrLn ""
-    putStr "Pressione Enter para continuar!"
+    painelPressioneEnter
     line <- getLine
     SP.system "clear"
     
     let jogador = (listaJogadores !! indiceJogador)
     
-    let auxJogador = incrementaMao 1 jogador baralhoEmbaralhado
+    let valorAtualizacao = 1
+    let auxJogador = incrementaMao valorAtualizacao jogador baralhoEmbaralhado
     let jogador = auxJogador
     
-    let auxShuffledDeck = atualizaBaralho 1 baralhoEmbaralhado
-    let baralhoEmbaralhado = auxShuffledDeck
+    let auxBaralhoEmbaralhado = atualizaBaralho valorAtualizacao baralhoEmbaralhado
+    let baralhoEmbaralhado = auxBaralhoEmbaralhado
     
     let testCoringaMais4 = testJogaCoringaMais4 mesaInicial jogador
     let mesa2 = atualizaMesa mesaInicial jogador testCoringaMais4
 
     let listaJogadores2 = atualizaListaJogadores indiceJogador [jogador] listaJogadores
-                   
+    
+    let tipoPainel = "monte"               
     if (numJogadores == 2)
-        then do painel2Jogadores listaJogadores2 indiceJogador "monte"
+        then do painel2Jogadores listaJogadores2 indiceJogador tipoPainel
     
     else if (numJogadores == 3)
-        then do painel3Jogadores listaJogadores2 indiceJogador "monte"
+        then do painel3Jogadores listaJogadores2 indiceJogador tipoPainel
      
     else if (numJogadores == 4)
-        then do painel4Jogadores listaJogadores2 indiceJogador "monte"
+        then do painel4Jogadores listaJogadores2 indiceJogador tipoPainel
              
         else do return()              
     
@@ -221,7 +231,9 @@ incementaMaoJogador mesaInicial listaJogadores indiceJogador ordem numJogadores 
     
     coresEmbaralhadas <- embaralhaLista cores
     
-    let mesaAux = atualizaCorCoringa ((cor mesa2) == "Preta") (head coresEmbaralhadas) mesa2
+    let verificaCorPreta = (cor mesa2) == "Preta"
+    let corAleatoria = head coresEmbaralhadas
+    let mesaAux = atualizaCorCoringa verificaCorPreta corAleatoria mesa2
     let mesa2 = mesaAux
 
     putStrLn "" 
@@ -240,28 +252,29 @@ turnoJogadorReal mesaInicial listaJogadores ordem numJogadores baralhoEmbaralhad
     
     let indiceJogador = 0
     let jogador = (head listaJogadores) 
-      
+    
+    let tipoPainel = "normal"  
     if (numJogadores == 2)
-        then do painel2Jogadores listaJogadores indiceJogador "normal"
+        then do painel2Jogadores listaJogadores indiceJogador tipoPainel
     
     else if (numJogadores == 3)
-        then do painel3Jogadores listaJogadores indiceJogador "normal"
+        then do painel3Jogadores listaJogadores indiceJogador tipoPainel
         
     else if (numJogadores == 4)
-        then do painel4Jogadores listaJogadores indiceJogador "normal"
+        then do painel4Jogadores listaJogadores indiceJogador tipoPainel
         
         else do return()
     
-    let viabilidadeJogada = verificaViabilidadeJogada 0 mesaInicial jogador
+    let viabilidadeJogada = verificaViabilidadeJogada valorInicialRecursao mesaInicial jogador
     
     if (viabilidadeJogada)
         then do let indicesDisponiveis = verificaIndicesDisponiveis indiceJogador mesaInicial jogador 
                 painelCartasViaveis mesaInicial indicesDisponiveis jogador
-                
                 solicitaJogadaJogadorReal mesaInicial listaJogadores ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
         
         else do putStrLn ""
-                painelJogadaIndisponivel mesaInicial "normal"
+                painelJogadaIndisponivel mesaInicial tipoPainel
+                painelPressioneEnter
                 incementaMaoJogadorReal mesaInicial listaJogadores ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
 
 incementaMaoJogadorReal mesaInicial listaJogadores ordem numJogadores baralhoEmbaralhado opcaoJogadorReal = do   
@@ -272,27 +285,28 @@ incementaMaoJogadorReal mesaInicial listaJogadores ordem numJogadores baralhoEmb
     let indiceJogador = 0
     let jogador = (head listaJogadores)
 
-    
-    let auxJogador = incrementaMao 1 jogador baralhoEmbaralhado
+    let valorAtualizacao = 1
+    let auxJogador = incrementaMao valorAtualizacao jogador baralhoEmbaralhado
     let jogador = auxJogador
     
-    let auxShuffledDeck = atualizaBaralho 1 baralhoEmbaralhado
-    let baralhoEmbaralhado = auxShuffledDeck
+    let auxBaralhoEmbaralhado = atualizaBaralho valorAtualizacao baralhoEmbaralhado
+    let baralhoEmbaralhado = auxBaralhoEmbaralhado
 
     let listaJogadores2 = atualizaListaJogadores indiceJogador [jogador] listaJogadores
-                   
+    
+    let tipoPainel = "monte"               
     if (numJogadores == 2)
-        then do painel2Jogadores listaJogadores2 indiceJogador "monte"
+        then do painel2Jogadores listaJogadores2 indiceJogador tipoPainel
     
     else if (numJogadores == 3)
-        then do painel3Jogadores listaJogadores2 indiceJogador "monte"
+        then do painel3Jogadores listaJogadores2 indiceJogador tipoPainel
      
     else if (numJogadores == 4)
-        then do painel4Jogadores listaJogadores2 indiceJogador "monte"
+        then do painel4Jogadores listaJogadores2 indiceJogador tipoPainel
              
         else do return()              
     
-    let viabilidadeJogada = verificaViabilidadeJogada 0 mesaInicial jogador
+    let viabilidadeJogada = verificaViabilidadeJogada valorInicialRecursao mesaInicial jogador
     
     if (viabilidadeJogada)
         then do let indicesDisponiveis = verificaIndicesDisponiveis indiceJogador mesaInicial jogador
@@ -300,7 +314,7 @@ incementaMaoJogadorReal mesaInicial listaJogadores ordem numJogadores baralhoEmb
                 solicitaJogadaJogadorReal mesaInicial listaJogadores2 ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
         
         else do putStrLn ""
-                painelJogadaIndisponivel mesaInicial "monte"
+                painelJogadaIndisponivel mesaInicial tipoPainel
                 atualizaJogo mesaInicial mesaInicial listaJogadores2 indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
                 
 
@@ -318,12 +332,11 @@ solicitaJogadaJogadorReal mesaInicial listaJogadores ordem numJogadores baralhoE
     let viabilidadeIndice = verificaViabilidadeIndice indiceCarta mesaInicial jogador
 
     if (viabilidadeIndice)
-        then do let mesa2 = (jogador !! indiceCarta)
-                
+        then do let mesa2 = (jogador !! indiceCarta)          
                 let auxJogador = jogaCarta mesa2 jogador
                 let jogador = auxJogador
                 
-                let listaJogadores2 = atualizaListaJogadores 0 [jogador] listaJogadores
+                let listaJogadores2 = atualizaListaJogadores indiceJogador [jogador] listaJogadores
                 isCoringa mesaInicial mesa2 listaJogadores2 ordem numJogadores baralhoEmbaralhado opcaoJogadorReal 
         
         else do putStrLn ""
@@ -367,9 +380,7 @@ testaValidadeCorCoringa mesaInicial mesa2 listaJogadores ordem numJogadores bara
 
 atualizaJogo mesaInicial mesa2 listaJogadores indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal = do
     
-    putStrLn ""
-    putStrLn ""
-    putStr "Pressione Enter para continuar!"
+    painelPressioneEnter
     line <- getLine
     SP.system "clear"
     
@@ -378,17 +389,19 @@ atualizaJogo mesaInicial mesa2 listaJogadores indiceJogador ordem numJogadores b
     let jogador = (listaJogadores !! indiceJogador)  
     
     let proximoJogador = (listaJogadores !! indiceProxJogador)
-    
+
     let novoIndiceProxJogador = numProxJogador ordem indiceProxJogador numJogadores
-   
+    
+    let tipoPainel = "fim" 
+       
     if ((length jogador == 0) && (numJogadores == 2))
-        then do painel2Jogadores listaJogadores indiceJogador "fim"
+        then do painel2Jogadores listaJogadores indiceJogador tipoPainel
     
     else if ((length jogador == 0) && (numJogadores == 3))
-        then do painel3Jogadores listaJogadores indiceJogador "fim"
+        then do painel3Jogadores listaJogadores indiceJogador tipoPainel
     
     else if ((length jogador == 0) && (numJogadores == 4))
-        then do painel4Jogadores listaJogadores indiceJogador "fim"
+        then do painel4Jogadores listaJogadores indiceJogador tipoPainel
     
     else if ((mesaInicial /= mesa2) && (tipo mesa2 == "Inverter"))
         then do let novaOrd = inverteOrdem ordem
@@ -396,35 +409,31 @@ atualizaJogo mesaInicial mesa2 listaJogadores indiceJogador ordem numJogadores b
                 verificaJogadorReal mesa2 listaJogadores indiceProxJogador novaOrd numJogadores baralhoEmbaralhado opcaoJogadorReal
     
     else if ((mesaInicial /= mesa2) && (tipo mesa2 == "Pular"))
-        then do let novoIndiceProxJogador = numProxJogador ordem indiceProxJogador numJogadores
-                verificaJogadorReal mesa2 listaJogadores novoIndiceProxJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
+        then do verificaJogadorReal mesa2 listaJogadores novoIndiceProxJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
         
     else if ((mesaInicial /= mesa2) && (tipo mesa2 == "Mais2"))
-        then do let auxProximoJogador = incrementaMao 2 proximoJogador baralhoEmbaralhado
+        then do let valorAtualizacao = 2
+        
+                let auxProximoJogador = incrementaMao valorAtualizacao proximoJogador baralhoEmbaralhado
                 let proximoJogador = auxProximoJogador
                 
-                let auxShuffledDeck = atualizaBaralho 2 baralhoEmbaralhado
-                let baralhoEmbaralhado = auxShuffledDeck
+                let auxBaralhoEmbaralhado = atualizaBaralho valorAtualizacao baralhoEmbaralhado
+                let baralhoEmbaralhado = auxBaralhoEmbaralhado
                 
                 let listaJogadores2 = atualizaListaJogadores indiceProxJogador [proximoJogador] listaJogadores
                 verificaJogadorReal mesa2 listaJogadores2 novoIndiceProxJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal             
 
     else if ((mesaInicial /= mesa2) && (tipo mesa2 == "CoringaMais4"))
-        then do let auxProximoJogador = incrementaMao 4 proximoJogador baralhoEmbaralhado
+        then do let valorAtualizacao = 4
+        
+                let auxProximoJogador = incrementaMao valorAtualizacao proximoJogador baralhoEmbaralhado
                 let proximoJogador = auxProximoJogador
 
-                let auxShuffledDeck = atualizaBaralho 4 baralhoEmbaralhado
-                let baralhoEmbaralhado = auxShuffledDeck
+                let auxBaralhoEmbaralhado = atualizaBaralho valorAtualizacao baralhoEmbaralhado
+                let baralhoEmbaralhado = auxBaralhoEmbaralhado
                 
                 let listaJogadores2 = atualizaListaJogadores indiceProxJogador [proximoJogador] listaJogadores
                 verificaJogadorReal mesa2 listaJogadores2 novoIndiceProxJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
         
         else do verificaJogadorReal mesa2 listaJogadores indiceProxJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
 
-
-verificaJogadorReal mesa listaJogadores indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal = do
-    
-    if (opcaoJogadorReal && indiceJogador == 0)
-        then do turnoJogadorReal mesa listaJogadores ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
-        
-        else do turnoJogador mesa listaJogadores indiceJogador ordem numJogadores baralhoEmbaralhado opcaoJogadorReal
