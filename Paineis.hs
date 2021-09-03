@@ -4,6 +4,7 @@ module Paineis
 , painelTrocaCorCoringa
 , painelSorteio
 , painelInicial
+, painelPressioneEnter
 , painel2Jogadores
 , painel3Jogadores
 , painel4Jogadores
@@ -11,6 +12,7 @@ module Paineis
 
 import qualified System.Process as SP
 import Util (exibiCartasViaveis)
+
 
 painelCartasViaveis mesa indicesViaveis jogador = do
          
@@ -29,9 +31,6 @@ painelJogadaIndisponivel mesa tipo = do
                         print mesa
                         putStrLn "" 
                         putStrLn "Jogada indisponível!"
-                        putStrLn ""
-                        putStrLn ""
-                        putStr "Pressione Enter para continuar!"
         
         else if (tipo == "monte")
                 then do putStr "Mesa: " 
@@ -58,7 +57,7 @@ painelSorteio cartasSorteio numJogadores indiceMaiorCarta = do
          
          SP.system "clear"
          
-         putStrLn "Sorteio Para Definir o Jogador Iniciante: "
+         putStrLn "Sorteio a Partir de Cartas Retiradas do Monte Para Definir o Jogador Iniciante: "
          putStrLn " "
          
          if ((numJogadores == 2) && (indiceMaiorCarta == -1))
@@ -146,7 +145,14 @@ painelInicial listaJogadores numJogadores= do
                         putStrLn ("Jogador 3: " ++ show (listaJogadores !! 2))
                         putStrLn ("Jogador 4: " ++ show (listaJogadores !! 3))
                 
-                else do return() 
+                else do return()
+
+
+painelPressioneEnter = do
+
+    putStrLn ""
+    putStrLn ""
+    putStr "Pressione Enter para continuar!" 
 
 painel2Jogadores listaJogadores indiceJogador tipo = do         
          
