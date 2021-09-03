@@ -28,14 +28,13 @@ O Uno é um jogo de cartas, ao qual pode ser jogado por até 4 pessoas e a prime
     
 ## Como executar
 
-* Caso você rode o programa em windows: 
-* 1. Aparentemente a biblioteca System.Random não está incluída no pacote bibliotecas padrão do Haskell para windows, então você precisa incluí-la para o programa rodar.
-* 2. Por algum motivo o comando runhaskell não é reconhecido. Então será necessário compilar o programa com o comando `ghc --make MainProgram.hs`, e em seguida executar o programa com `./MainProgram`.
-* 3. Ainda assim, provavelmente, o programa não apresentará o comportamento desejado (por motivo desconhecido o windows não gera algumas saídas de dados implementadas no código).
+* **Caso você rode o programa em windows**: 
+  * 1. Aparentemente a biblioteca System.Random não está incluída no pacote bibliotecas padrão do Haskell para windows, então você precisa incluí-la para o programa rodar.
+  * 2. Por algum motivo o comando runhaskell não é reconhecido. Então será necessário compilar o programa com o comando `ghc --make MainProgram.hs`, e em seguida executar o programa com `./MainProgram`.
+  * 3. Ainda assim, provavelmente, o programa não apresentará o comportamento desejado (por motivo desconhecido o windows não gera algumas saídas de dados implementadas no código).
 
-* Caso você rode o programa em Linux:
-
-* **Deve-se usar o comando**: `runghci MainProgram.hs` ou `runhaskell MainProgram.hs`
+* **Caso você rode o programa em Linux**:
+  * Deve-se usar o comando: `runghci MainProgram.hs` ou `runhaskell MainProgram.hs`
 
 ## Funcionalidades
 
