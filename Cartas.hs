@@ -1,12 +1,5 @@
 module Cartas ( Carta(..), baralho) where  
 
-import System.Random
-import Data.Array.IO
-import Control.Monad
-
-{-data Carta = Zero {cor :: String} | Um {cor :: String} | Dois {cor :: String} | Tres {cor :: String} | Quatro {cor :: String}
-           | Cinco {cor :: String} | Seis {cor :: String} | Sete {cor :: String} | Oito {cor :: String} | Nove {cor :: String}  
-           | Mais2 {cor :: String} | Inverter {cor :: String} | Pular {cor :: String} | Coringa | CoringaMais4 deriving (Eq)-}
            
 data Carta = Carta {tipo :: String, cor :: String} deriving (Eq)
 
@@ -73,13 +66,8 @@ baralho = cartasZero ++ cartasUm ++ cartasDois ++ cartasTres ++ cartasQuatro ++ 
           cartasSeis ++ cartasSete ++ cartasOito ++ cartasNove ++ cartasInverter ++ cartasPular ++
           cartasCoringa ++ cartasCoringaMais4
           
-{-getBaralho :: [Carta] -> IO [Carta]
-getBaralho b = shuffle b-}
           
 instance Show Carta where  
-    show Carta {tipo = a, cor = b} = a ++ " - " ++ b
-    
-
-
+    show Carta {tipo = a, cor = b} = a ++ " - " ++ b    
     
 
