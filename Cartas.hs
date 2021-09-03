@@ -1,9 +1,5 @@
 module Cartas ( Carta(..), baralho) where  
 
-import System.Random
-import Data.Array.IO
-import Control.Monad
-
 data Carta = Carta {tipo :: String, cor :: String} deriving (Eq)
 
 cartasZero :: [Carta]
@@ -68,6 +64,7 @@ baralho :: [Carta]
 baralho = cartasZero ++ cartasUm ++ cartasDois ++ cartasTres ++ cartasQuatro ++ cartasCinco ++ 
           cartasSeis ++ cartasSete ++ cartasOito ++ cartasNove ++ cartasInverter ++ cartasPular ++
           cartasCoringa ++ cartasCoringaMais4
+
 
 instance Show Carta where  
     show Carta {tipo = a, cor = b} = a ++ " - " ++ b
